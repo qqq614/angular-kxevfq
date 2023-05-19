@@ -1,0 +1,57 @@
+<ng-template
+  #popOverIcon
+  let-about="about"
+  let-authorName="authorName"
+  let-image="image"
+>
+  <i
+    class="bi bi-info-circle-fill"
+    (click)="pop.show()"
+    placement="left"
+    container="body"
+    #pop="bs-popover"
+    popoverTitle="About {{ authorName }}"
+    [popover]="popOverContent"
+    [outsideClick]="true"
+    triggers=""
+  ></i>
+  <ng-template #popOverContent>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="tt">{{ about }}</div>
+      </div>
+      <div class="col-md-6">
+        <img src="{{ image }}" style="width:100px;height:100px" />
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template let-row="rowInfo" #authorList>
+  <ul *ngIf="row">
+    <li *ngFor="let author of row.rowData.authors">
+      <span
+        >{{ author.name }}
+        <ng-container
+          [ngTemplateOutlet]="popOverIcon"
+          [ngTemplateOutletContext]="{
+            about: author.about,
+            authorName: author.name,
+            image: author.image
+          }"
+        ></ng-container>
+      </span>
+    </li>
+  </ul>
+</ng-template>
+
+<ag-grid-angular
+  [columnDefs]="columnDefs"
+  [defaultColDef]="defaultColDef"
+  class="ag-theme-alpine"
+  [rowData]="rowData"
+  (gridReady)="onGridReady($event)"
+  (firstDataRendered)="dataRendered($event)"
+  style="width:100vh;height:100vw"
+>
+</ag-grid-angular>
